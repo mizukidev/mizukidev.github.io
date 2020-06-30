@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="ja" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>第１回：Windows10のWSL2をインストールしてubuntuを使いこなそう | みずきのブログ</title><meta name="description" content="Windows10のWSL2をインストール概要  WSL2は優秀なサンドボックス 軽快　WSL2は、Windows端末で軽快に動作するlinuxサンドボックスです　中身はhyper-vのVMです 安心　OS標準仮想ですので　ホストOSのスリープやシャットダウンに同期するので扱いやすいです 安全　サンドボックス内の開発ですので、ホストＯＳが壊れる危険性はほとんどなくなります 簡単　サンドボックスを外"><meta name="keywords" content="windows10,WSL2"><meta name="author" content="mizuki"><meta name="copyright" content="mizuki"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://yoursite.com/wsl01/"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta property="og:type" content="article"><meta property="og:title" content="第１回：Windows10のWSL2をインストールしてubuntuを使いこなそう"><meta property="og:url" content="http://yoursite.com/wsl01/"><meta property="og:site_name" content="みずきのブログ"><meta property="og:description" content="Windows10のWSL2をインストール概要  WSL2は優秀なサンドボックス 軽快　WSL2は、Windows端末で軽快に動作するlinuxサンドボックスです　中身はhyper-vのVMです 安心　OS標準仮想ですので　ホストOSのスリープやシャットダウンに同期するので扱いやすいです 安全　サンドボックス内の開発ですので、ホストＯＳが壊れる危険性はほとんどなくなります 簡単　サンドボックスを外"><meta property="og:image" content="http://yoursite.com/wsl01/webdev.jpg"><meta property="article:published_time" content="2020-06-21T10:59:05.000Z"><meta property="article:modified_time" content="2020-06-29T07:57:35.578Z"><meta name="twitter:card" content="summary"><script>var activateDarkMode = function () {
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#000')
+  }
+}
+var activateLightMode = function () {
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null) {
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', '#fff')
+  }
+}
+
+var getCookies = function (name) {
+  const value = `; ${document.cookie}`
+  const parts = value.split(`; ${name}=`)
+  if (parts.length === 2) return parts.pop().split(';').shift()
+}
+
+var autoChangeMode = 'false'
+var t = getCookies('theme')
+if (autoChangeMode === '1') {
+  var isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+  var isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+  var isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+  var hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+  if (t === undefined) {
+    if (isLightMode) activateLightMode()
+    else if (isDarkMode) activateDarkMode()
+    else if (isNotSpecified || hasNoSupport) {
+      console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+      var now = new Date()
+      var hour = now.getHours()
+      var isNight = hour <= 6 || hour >= 18
+      isNight ? activateDarkMode() : activateLightMode()
+    }
+    window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+      if (Cookies.get('theme') === undefined) {
+        e.matches ? activateDarkMode() : activateLightMode()
+      }
+    })
+  } else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else if (autoChangeMode === '2') {
+  now = new Date()
+  hour = now.getHours()
+  isNight = hour <= 6 || hour >= 18
+  if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode()
+} else {
+  if (t === 'dark') activateDarkMode()
+  else if (t === 'light') activateLightMode()
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="prev" title="第２回：ubuntu 18.04を更新しエディタ・端末を用意する" href="http://yoursite.com/wsl02/"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  copy: {
+    success: 'Copy successfully',
+    error: 'Copy error',
+    noSupport: 'The browser does not support'
+  },
+  bookmark: {
+    message_prev: 'Press',
+    message_next: 'to bookmark this page'
+  },
+  runtime_unit: 'days',
+  runtime: false,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  baiduPush: false,
+  highlightCopy: true,
+  highlightLang: true,
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isanchor: false    
+}</script><script>var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isSidebar: true,
+  postUpdate: '2020-06-29 16:57:35'
+}</script><noscript><style>
+#nav {
+  opacity: 1
+}
+.justified-gallery img{
+  opacity: 1
+}
+</style></noscript><meta name="generator" content="Hexo 4.2.1"></head><body><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="/img/avatar.png" onerror="onerror=null;src='/img/mizuki.gif'" alt="avatar"/></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">記事</div><div class="length_num">26</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">タグ</div><div class="length_num">34</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">カテゴリ</div><div class="length_num">11</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-address-card"></i><span> contact</span></a></div><div class="menus_item"><a class="site-page" href="/privacy/"><i class="fa-fw far fa-file-pdf"></i><span> privacy</span></a></div><div class="menus_item"><a class="site-page" href="/profile/"><i class="fa-fw fas fa-link"></i><span> profile</span></a></div></div></div></div><i class="fas fa-arrow-right on" id="toggle-sidebar"></i><div id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">カテゴリ</div><div class="sidebar-toc__progress"><span class="progress-notice">You've read</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows10のWSL2をインストール概要"><span class="toc-number">1.</span> <span class="toc-text">Windows10のWSL2をインストール概要</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#WSL2は優秀なサンドボックス"><span class="toc-number">1.1.</span> <span class="toc-text">WSL2は優秀なサンドボックス</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WSL１とWSL２どっちがいいか？-結論：サーバー開発ならWSL2"><span class="toc-number">1.2.</span> <span class="toc-text">ＷＳＬ１とＷＳＬ２どっちがいいか？ 結論：サーバー開発ならWSL2</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#デメリット"><span class="toc-number">1.3.</span> <span class="toc-text">デメリット</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows10をバージョン2004までupdateする"><span class="toc-number">2.</span> <span class="toc-text">Windows10をバージョン2004までupdateする</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#方法１．クリーンインストールする"><span class="toc-number">2.1.</span> <span class="toc-text">方法１．クリーンインストールする</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方法２windowsUpdate＆Insider加入する"><span class="toc-number">2.2.</span> <span class="toc-text">方法２windowsUpdate＆Insider加入する</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WSL-と-Virtual-Machine-Platform-の有効化"><span class="toc-number">2.3.</span> <span class="toc-text">WSL と Virtual Machine Platform の有効化</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#WSLカーネル更新ダウンロード-amp-インストール"><span class="toc-number">3.</span> <span class="toc-text">WSLカーネル更新ダウンロード&amp;インストール</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#パワーシェルでデフォルトをWSL2に切り替える"><span class="toc-number">4.</span> <span class="toc-text">パワーシェルでデフォルトをWSL2に切り替える</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#ubuntuをインストールします-18-04を推奨"><span class="toc-number">5.</span> <span class="toc-text">ubuntuをインストールします　 18.04を推奨</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#初回起動時は展開で少しかかります"><span class="toc-number">6.</span> <span class="toc-text">初回起動時は展開で少しかかります</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#user-id-passwordを２回入力"><span class="toc-number">6.1.</span> <span class="toc-text">user id passwordを２回入力</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#パワーシェルから-確認"><span class="toc-number">7.</span> <span class="toc-text">パワーシェルから　確認</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#正常であればおわりです"><span class="toc-number">8.</span> <span class="toc-text">正常であればおわりです</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#（参考）ホストOSから使うWSLコマンド"><span class="toc-number">9.</span> <span class="toc-text">（参考）ホストOSから使うWSLコマンド</span></a></li></ol></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/wsl01/webdev.jpg)"><nav id="nav"><span class="pull-left" id="blog_name"><a class="blog_title" id="site-name" href="/">みずきのブログ</a></span><span class="pull-right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/contact/"><i class="fa-fw far fa-address-card"></i><span> contact</span></a></div><div class="menus_item"><a class="site-page" href="/privacy/"><i class="fa-fw far fa-file-pdf"></i><span> privacy</span></a></div><div class="menus_item"><a class="site-page" href="/profile/"><i class="fa-fw fas fa-link"></i><span> profile</span></a></div></div><span class="toggle-menu close"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><div id="post-title"><div class="posttitle">第１回：Windows10のWSL2をインストールしてubuntuを使いこなそう</div></div><div id="post-meta"><div class="meta-firstline"><time class="post-meta__date" title="Created 2020-06-21 19:59:05"><i class="fa-fw far fa-calendar-alt"></i> Created 2020-06-21</time><span class="post-meta__categories"><span class="post-meta__separator">|</span><i class="fas fa-inbox fa-fw post-meta__icon"></i><a class="post-meta__categories" href="/categories/WSL2/">WSL2</a></span></div><div class="meta-secondline"> </div><div class="meta-thirdline"><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta__icon"></i><span>Post View:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout_post" id="content-inner"><article id="post"><div class="post-content" id="article-container"><h1 id="Windows10のWSL2をインストール概要"><a href="#Windows10のWSL2をインストール概要" class="headerlink" title="Windows10のWSL2をインストール概要"></a>Windows10のWSL2をインストール概要</h1><img src= "/img/loading.gif" data-src="/wsl01/linux-tux.svg" class="" title="linux-tux">
+
+<h2 id="WSL2は優秀なサンドボックス"><a href="#WSL2は優秀なサンドボックス" class="headerlink" title="WSL2は優秀なサンドボックス"></a>WSL2は優秀なサンドボックス</h2><ul>
+<li>軽快　WSL2は、Windows端末で軽快に動作するlinuxサンドボックスです　中身はhyper-vのVMです</li>
+<li>安心　OS標準仮想ですので　ホストOSのスリープやシャットダウンに同期するので扱いやすいです</li>
+<li>安全　サンドボックス内の開発ですので、ホストＯＳが壊れる危険性はほとんどなくなります</li>
+<li>簡単　サンドボックスを外から操作するので、初期化、バックアップ＆回復、クローン＆他端末複製など自由に管理できます</li>
+<li>支援　開発ツールの三種（エディタ、ターミナル、ファイル操作）がサンドボックスに対応しており、とくにVisualStudioCodeは飛び抜けて優秀です。リモートをほとんど意識せず直撃開発のような感覚で開発できます　WindowsTerminal や Explorerもリモートに対応しており特別不便を感じることはあまりないです</li>
+</ul>
+<p>今はVisualStudioCodeで十分開発できますので、Linuxデスクトップをインストールする必要はほとんどありません </p>
+<h2 id="WSL１とWSL２どっちがいいか？-結論：サーバー開発ならWSL2"><a href="#WSL１とWSL２どっちがいいか？-結論：サーバー開発ならWSL2" class="headerlink" title="ＷＳＬ１とＷＳＬ２どっちがいいか？ 結論：サーバー開発ならWSL2"></a>ＷＳＬ１とＷＳＬ２どっちがいいか？ 結論：サーバー開発ならWSL2</h2><ul>
+<li>コンパイルのような作業が多い方はＷＳＬ２の方が明らかに良いです　コンパイルは倍ほど違います</li>
+<li>サーバー系のフレームワーク（Ruby on Rails、laravel、Django）をよく使用する場合はWSL2が良いです</li>
+<li>デザイナー・フロントエンド系の方はそのままでも良いと思います　ＷＳＬ１でも十分使えます</li>
+</ul>
+<h2 id="デメリット"><a href="#デメリット" class="headerlink" title="デメリット"></a>デメリット</h2><ul>
+<li>ホストＯＳはパワーシェルでの操作が必要なこと</li>
+<li>ホストＯＳのフォルダ構成、ファイル名、シェルなどがLinux準拠ではないので管理しずらい</li>
+</ul>
+<p>それでは、実際にインストールします</p>
+<h1 id="Windows10をバージョン2004までupdateする"><a href="#Windows10をバージョン2004までupdateする" class="headerlink" title="Windows10をバージョン2004までupdateする"></a>Windows10をバージョン2004までupdateする</h1><p>WSL2 をインストールするためには、windows10バージョン2004まで上げる必要があります<br>Windowsキー＋winver で確認してください</p>
+<img src= "/img/loading.gif" data-src="/wsl01/winver.png" class="" title="winver">
+
+<p>このバージョンが1909等であればアップデートしなければなりません<br>ですがこの作業はものすごく時間がかかり、ほとんどクリーン再インストールぐらいの時間がかかります　数十ギガ単位ダウンロード発生＆数時間必要しますのでご注意ください</p>
+<p>方法１クリーンインストール　か　方法２windowsUpdate＆Insideで2004まで上げるか、いずれかの方法で<br>クリーンインストールのほうが断然早いですが、ソフトが消えて困るなら方法２がおすすめです</p>
+<h2 id="方法１．クリーンインストールする"><a href="#方法１．クリーンインストールする" class="headerlink" title="方法１．クリーンインストールする"></a>方法１．クリーンインストールする</h2><p>  <a href="https://freesoft-100.com/review/microsoft-windows-office-iso-download.html" target="_blank" rel="noopener">Windows ISO Downloader</a>を使ってWindows10のISOをダウンロードします</p>
+  <img src= "/img/loading.gif" data-src="/wsl01/win10iso.png" class="" title="Windows ISO Downloader">
+
+
+
+<p>Windows10 Client Insider Preview  build 20150　か、それより最新があればそれを使ってください<br>rufusというソフトをダウンロードしインストール用ＵＳＢを作成し、端末をUSBから起動してクリーンインストールします</p>
+<h2 id="方法２windowsUpdate＆Insider加入する"><a href="#方法２windowsUpdate＆Insider加入する" class="headerlink" title="方法２windowsUpdate＆Insider加入する"></a>方法２windowsUpdate＆Insider加入する</h2><p>Windows update を最後まで当ててください</p>
+<img src= "/img/loading.gif" data-src="/wsl01/vol182_screen01.png" class="" title="vol182_screen01">
+
+
+<p>Windows insider Program に参加します<br>マイクロソフトへアカウント登録が必要になります</p>
+<img src= "/img/loading.gif" data-src="/wsl01/windows-insider-program-001.png" class="" title="windows-insider-program-001">
+
+<img src= "/img/loading.gif" data-src="/wsl01/windows-insider-program-002-1593192388985.png" class="" title="windows-insider-program-002">
+
+<p> あとは、windowsUpdate をしてください　何度か再起動がはいります</p>
+<h2 id="WSL-と-Virtual-Machine-Platform-の有効化"><a href="#WSL-と-Virtual-Machine-Platform-の有効化" class="headerlink" title="WSL と Virtual Machine Platform の有効化"></a>WSL と Virtual Machine Platform の有効化</h2><p>管理者権限でパワーシェルを立ち上げ以下のコマンドを入力ます　Windowsキー＋ X   →   A   起動できます </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dism.exe &#x2F;online &#x2F;enable-feature &#x2F;featurename:Microsoft-Windows-Subsystem-Linux &#x2F;all &#x2F;norestart</span><br><span class="line">dism.exe &#x2F;online &#x2F;enable-feature &#x2F;featurename:VirtualMachinePlatform &#x2F;all &#x2F;norestart</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="WSLカーネル更新ダウンロード-amp-インストール"><a href="#WSLカーネル更新ダウンロード-amp-インストール" class="headerlink" title="WSLカーネル更新ダウンロード&amp;インストール"></a>WSLカーネル更新ダウンロード&amp;インストール</h1><p>こちら <a href="https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" target="_blank" rel="noopener">https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi</a></p>
+<img src= "/img/loading.gif" data-src="/wsl01/wslUpdate.png" class="" title="wslUpdate">
+
+
+
+<h1 id="パワーシェルでデフォルトをWSL2に切り替える"><a href="#パワーシェルでデフォルトをWSL2に切り替える" class="headerlink" title="パワーシェルでデフォルトをWSL2に切り替える"></a>パワーシェルでデフォルトをWSL2に切り替える</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl --set-default-version 2</span><br></pre></td></tr></table></figure>
+
+
+
+<h1 id="ubuntuをインストールします-18-04を推奨"><a href="#ubuntuをインストールします-18-04を推奨" class="headerlink" title="ubuntuをインストールします　 18.04を推奨"></a>ubuntuをインストールします　 18.04を推奨</h1><p>18.04の方が借りれるサーバーが多いため</p>
+<p>Windows キー  →  store とおそらく出ます　検索で Ubunu　入手を押してインストールします</p>
+<img src= "/img/loading.gif" data-src="/wsl01/ubuntu18.04-1593227239854.jpg" class="" title="ubuntu18.04">
+
+
+
+<h1 id="初回起動時は展開で少しかかります"><a href="#初回起動時は展開で少しかかります" class="headerlink" title="初回起動時は展開で少しかかります"></a>初回起動時は展開で少しかかります</h1><img src= "/img/loading.gif" data-src="/wsl01/Ubuntu18OnWSL06.png" class="" title="img">
+
+<h2 id="user-id-passwordを２回入力"><a href="#user-id-passwordを２回入力" class="headerlink" title="user id passwordを２回入力"></a>user id passwordを２回入力</h2><img src= "/img/loading.gif" data-src="/wsl01/Ubuntu18OnWSL07.png" class="" title="img">
+
+
+
+<h1 id="パワーシェルから-確認"><a href="#パワーシェルから-確認" class="headerlink" title="パワーシェルから　確認"></a>パワーシェルから　確認</h1><img src= "/img/loading.gif" data-src="/wsl01/image-20200627125034222.png" class="" title="image-20200627125034222">
+
+
+
+<h1 id="正常であればおわりです"><a href="#正常であればおわりです" class="headerlink" title="正常であればおわりです"></a>正常であればおわりです</h1><p>　</p>
+<h1 id="（参考）ホストOSから使うWSLコマンド"><a href="#（参考）ホストOSから使うWSLコマンド" class="headerlink" title="（参考）ホストOSから使うWSLコマンド"></a>（参考）ホストOSから使うWSLコマンド</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#インストールされているlinuxの一覧を見る</span><br><span class="line">wsl -l -v　</span><br><span class="line"></span><br><span class="line">#起動</span><br><span class="line">wsl --d ubuntu-18.04 　</span><br><span class="line"></span><br><span class="line">#停止 #強制終了</span><br><span class="line">wsl --terminate ubuntu-18.04　＃終了</span><br><span class="line">wsl --shutdown ubuntu-18.04 　#強制終了</span><br><span class="line"></span><br><span class="line">#バージョンを１に戻す　２にする </span><br><span class="line">wsl --set-version  ubuntu-18.04 1</span><br><span class="line">wsl --set-version  ubuntu-18.04 2</span><br><span class="line"></span><br><span class="line">＃デフォルトのバージョンを指定する</span><br><span class="line">wsl　--set-default-version 1</span><br><span class="line"></span><br><span class="line">#エクスポート</span><br><span class="line">wsl --export ubuntu-18.04 .&#x2F;ubuntu-18.04.02.tar</span><br><span class="line"></span><br><span class="line">#インポート  インポートするにはlinx群が入るフォルダが必要</span><br><span class="line">mkdir ~&#x2F;AppData&#x2F;Local&#x2F;ubuntu-18.04.02</span><br><span class="line">wsl --import ubuntu-18.04.02 ~&#x2F;AppData&#x2F;Local&#x2F;ubuntu-18.04.02 .&#x2F;ubuntu-18.04.02.tar --version 2</span><br><span class="line"></span><br><span class="line">#参考：ヘルプ</span><br><span class="line">wsl --help</span><br></pre></td></tr></table></figure>
+</div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/windows10/">windows10</a><a class="post-meta__tags" href="/tags/WSL2/">WSL2</a></div><div class="post_share"><div class="social-share" data-image="/ubuntu01/lubuntu.png" data-sites="twitter"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"/><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/wsl02/"><img class="prev-cover" data-src="/wsl01/webdev.jpg" onerror="onerror=null;src='/img/blue.jpg'"><div class="pagination-info"><div class="label">前の記事</div><div class="prev_info">第２回：ubuntu 18.04を更新しエディタ・端末を用意する</div></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fas fa-thumbs-up fa-fw"></i><span> Related Articles</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/wsl02/" title="第２回：ubuntu 18.04を更新しエディタ・端末を用意する"><img class="relatedPosts_cover" data-src="wsl01/webdev.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-22</div><div class="relatedPosts_title">第２回：ubuntu 18.04を更新しエディタ・端末を用意する</div></div></a></div><div class="relatedPosts_item"><a href="/wsl03/" title="第３回：git node.jsの設定"><img class="relatedPosts_cover" data-src="wsl01/webdev.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-22</div><div class="relatedPosts_title">第３回：git node.jsの設定</div></div></a></div><div class="relatedPosts_item"><a href="/vagrant01/" title="Vagrant ubuntu18.04 リモートデスクトップ環境(xfce4)の生成"><img class="relatedPosts_cover" data-src="vagrant01\xfce.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-28</div><div class="relatedPosts_title">Vagrant ubuntu18.04 リモートデスクトップ環境(xfce4)の生成</div></div></a></div><div class="relatedPosts_item"><a href="/win10dev06/" title="powershellのバックスペースの音を消す"><img class="relatedPosts_cover" data-src="win10dev06/Windows10.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-28</div><div class="relatedPosts_title">powershellのバックスペースの音を消す</div></div></a></div><div class="relatedPosts_item"><a href="/win10dev01/" title="Laravelのインストール"><img class="relatedPosts_cover" data-src="win10dev01/laravel.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-22</div><div class="relatedPosts_title">Laravelのインストール</div></div></a></div><div class="relatedPosts_item"><a href="/win10dev03/" title="Win10にRails入れてVScodeでデバックしてみた"><img class="relatedPosts_cover" data-src="win10dev03/rails.png"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="far fa-calendar-alt fa-fw"></i> 2020-06-28</div><div class="relatedPosts_title">Win10にRails入れてVScodeでデバックしてみた</div></div></a></div></div></div></article></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2020 By mizuki</div></div></footer></div><section id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="font_plus" type="button" title="Increase Font Size"><i class="fas fa-plus"></i></button><button id="font_minus" type="button" title="Decrease Font Size"><i class="fas fa-minus"></i></button><button id="translateLink" type="button" title="Switch Between Traditional Chinese And Simplified Chinese">繁</button><button id="darkmode" type="button" title="Switch Between Light And Dark Mode"><i class="fas fa-adjust"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="Setting"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><i class="fas fa-arrow-up"></i></button></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page/instantpage.min.js" type="module" defer></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload/dist/lazyload.iife.min.js" async></script></body></html>
